@@ -39,6 +39,8 @@ if ($LASTEXITCODE -ne 0) {
 }
 git -C $tmp rm -rf --quiet --ignore-unmatch .
 Copy-Item -Path (Join-Path $root "dist\*") -Destination $tmp -Recurse -Force
+# 禁用 GitHub Pages 的 Jekyll 处理（否则 _astro/ 下划线目录会被 Jekyll 忽略，资源全部 404）
+New-Item -ItemType File -Path (Join-Path $tmp '.nojekyll') -Force | Out-Null
 git -C $tmp add -A
 git -C $tmp -c user.name="Solaris Bot" -c user.email="solaris-bot@users.noreply.github.com" commit --quiet -m "deploy: update site build $(Get-Date -Format 'yyyy-MM-dd HH:mm')"
 git -C $tmp push $repoUrl gh-pages --force
